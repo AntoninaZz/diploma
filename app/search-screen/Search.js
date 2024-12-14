@@ -44,17 +44,23 @@ const Search = () => {
     let radioButtons = [
         {
             id: '0',
-            label: (<Text style={[styles.formText, {paddingLeft: gap}]}>ні</Text>),
+            label: (<Text style={[styles.formText, { paddingLeft: gap }]}>ні</Text>),
             value: false,
             color: COLORS.darkgreen,
         },
         {
             id: '1',
-            label: (<Text style={[styles.formText, {paddingLeft: gap}]}>так</Text>),
+            label: (<Text style={[styles.formText, { paddingLeft: gap }]}>так</Text>),
             value: true,
             color: COLORS.darkgreen,
         }
     ];
+
+    function getDropdownItems(items) {
+        items.forEach(item => {
+            return <Picker.Item label={item.label} value={item.value} />
+        });
+    }
 
     return (
         <SafeAreaView style={[styles.container, { flex: 1, flexFlow: 'collumn' }]}>

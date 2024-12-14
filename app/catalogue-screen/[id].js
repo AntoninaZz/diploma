@@ -42,13 +42,13 @@ const Catalogue = () => {
             if (prop == "flower_size") {
                 switch (searchOrchid[prop]) {
                     case 'mini':
-                        if (dbOrchid[prop] > 0 && dbOrchid[prop] <= 6) percent += 10;
+                        if (dbOrchid[prop] > 0 && dbOrchid[prop] <= 6) percent += 20;
                         break;
                     case 'midi':
-                        if (dbOrchid[prop] > 6 && dbOrchid[prop] <= 9) percent += 10;
+                        if (dbOrchid[prop] > 6 && dbOrchid[prop] <= 9) percent += 20;
                         break;
                     case 'large':
-                        if (dbOrchid[prop] > 9) percent += 10;
+                        if (dbOrchid[prop] > 9) percent += 20;
                         break;
                 }
             } else if (prop == "classes") {
@@ -57,11 +57,24 @@ const Catalogue = () => {
                 for (let orchidClass in searchOrchidClasses) {
                     if (searchOrchidClasses[orchidClass] == dbOrchidClasses[orchidClass]) percent += 10;
                 }
+            } else if (prop == "pattern") {
+                if (dbOrchid[prop].includes(searchOrchid[prop])) percent += 50;
             } else if (dbOrchid[prop] == searchOrchid[prop]) {
-                percent += 10;
+                switch (prop) {
+                    case "background_color":
+                        percent += 50;
+                        break;
+                    case "pattern_color":
+                    case "lip_color":
+                        percent += 20;
+                        break;
+                    case "border":
+                        percent += 10;
+                        break;
+                }
             }
         }
-        return percent;
+        return Math.round((percent / 2.1) * 10) / 10;
     }
 
     function searchFlower(title, size, pattern, background, patternColor, lip, border, isBigLip, isAroma, isMini, isMultiflora) {
@@ -71,7 +84,7 @@ const Catalogue = () => {
         if (title ? title.length : undefined) {
             result = data[params.id] ? params.id == 'orchids' ? data[params.id].filter((orchid) => orchid.title.toLowerCase().includes(title.toLowerCase())).concat(data[params.id].filter((orchid) => orchid.alt_titles.toLowerCase().includes(title.toLowerCase()))) : data[params.id].filter((orchid) => orchid.title.toLowerCase().includes(title.toLowerCase())) : [];
         } else {
-            result = data[params.id] ? data[params.id].filter((orchid) => comparePercent(searchOrchid, orchid) > 0).sort((a, b) => comparePercent(searchOrchid, b) - comparePercent(searchOrchid, a)).map((orchid) => orchid = { ...orchid, percent: comparePercent(searchOrchid, orchid) }) : [];
+            result = data[params.id] ? data[params.id].filter((orchid) => comparePercent(searchOrchid, orchid) > 74).sort((a, b) => comparePercent(searchOrchid, b) - comparePercent(searchOrchid, a)).map((orchid) => orchid = { ...orchid, percent: comparePercent(searchOrchid, orchid) }) : [];
         }
         return result.length ? result : undefined;
     }
@@ -112,7 +125,7 @@ const Catalogue = () => {
                 keyExtractor={item => item.id}
                 numColumns={numColumns}
                 contentContainerStyle={[styles.container, { paddingBottom: 2 * gap, flexWrap: 'wrap' }]}
-                style={{height: availableSpace}}
+                style={{ height: availableSpace }}
                 columnWrapperStyle={{ gap }}
                 ListEmptyComponent={<Text style={[styles.title, { height: '85vh', marginTop: gap }]}>За запитом нічого не знайдено :(</Text>}
                 ListHeaderComponent={params.id == 'orchids' ?

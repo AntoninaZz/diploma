@@ -80,7 +80,7 @@ const Details = () => {
                             minimumTrackTintColor={COLORS.darkgreen}
                             maximumTrackTintColor={COLORS.lightgreen}
                             thumbTintColor={COLORS.darkgreen}
-                            steps={50}
+                            step={250}
                         />
                         <Text style={[styles.text, { marginLeft: water * 0.7 * vw / 5000 }]}>{water < 1000 ? water + ' мл' : water / 1000 + ' л'}{'\nводи'}</Text>
                         <Text style={[styles.input, { backgroundColor: 'none', width: 'auto' }]}>{drug} {params.d_unit ? params.d_unit : 'г'}</Text>
