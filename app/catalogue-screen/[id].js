@@ -136,8 +136,8 @@ const Catalogue = () => {
                 initialNumToRender={10}
                 onScroll={(event) => {
                     const totalWidth = event.nativeEvent.layoutMeasurement.width
-                    const xPosition = event.nativeEvent.contentOffset.x
-                    const newIndex = Math.round(xPosition / totalWidth)
+                    const yPosition = event.nativeEvent.contentOffset.y
+                    const newIndex = Math.round(yPosition / totalWidth)
                     if (newIndex !== currentIndex) {
                         setCurrentIndex(newIndex);
                     }
