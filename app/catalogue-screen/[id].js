@@ -1,5 +1,5 @@
 import { Text, SafeAreaView, ActivityIndicator, FlatList, TextInput, Dimensions } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback  } from 'react';
 import { Stack, useRouter, useGlobalSearchParams } from 'expo-router';
 import Tile from '../../components/Tile';
 import SearchBtn from '../../components/SearchBtn';
@@ -96,6 +96,16 @@ const Catalogue = () => {
         onChangeSpace(height);
     }
 
+    const renderItem = useCallback(({ item }) => (
+        <Tile
+            title={item.title}
+            img={`${imgSrc}${params.id}/${item.img}`}
+            percent={item.percent}
+            tags={params.id == 'orchids' ? { isBigLip: item.classes.includes("Біг ліп"), isAroma: item.classes.includes("Ароматна"), isMini: item.classes.includes("Міні"), isMultiflora: item.classes.includes("Мультифлора") } : undefined}
+            style={{ height: itemSize, width: itemSize, }}
+            handleNavigate={() => router.push({ pathname: `/details-screen/${item.title}`, params: { categorie: params.id, ...item } })} />
+      ), []);
+
     return (
         <SafeAreaView onLayout={onLayout} style={[styles.container, { flex: 1 }, !isLoading && !error ? { alignItems: 'flex-start' } : {}]}>
             <Stack.Screen
@@ -116,14 +126,7 @@ const Catalogue = () => {
                 data={Object.keys(params).length > 2 ?
                     searchFlower(params.search, params.size, params.pattern, params.background, params.patternColor, params.lip, params.border, params.isBigLip, params.isAroma, params.isMini, params.isMultiflora) :
                     data[params.id] ? data[params.id].sort(compareByColor) : []}
-                renderItem={({ item }) =>
-                    <Tile
-                        title={item.title}
-                        img={`${imgSrc}${params.id}/${item.img}`}
-                        percent={item.percent}
-                        tags={params.id == 'orchids' ? { isBigLip: item.classes.includes("Біг ліп"), isAroma: item.classes.includes("Ароматна"), isMini: item.classes.includes("Міні"), isMultiflora: item.classes.includes("Мультифлора") } : undefined}
-                        style={{ height: itemSize, width: itemSize, }}
-                        handleNavigate={() => router.push({ pathname: `/details-screen/${item.title}`, params: { categorie: params.id, ...item } })} />}
+                renderItem={renderItem}
                 keyExtractor={item => item.id}
                 numColumns={numColumns}
                 contentContainerStyle={[styles.container, { paddingBottom: 2 * gap, flexWrap: 'wrap' }]}
