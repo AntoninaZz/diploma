@@ -1,7 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { COLORS } from "../constants/theme";
 import { gap } from '../constants/constants';
-import { Dimensions } from 'react-native';
 
 const vw = Dimensions.get('window').width;
 

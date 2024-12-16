@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { Image } from 'expo-image';
 import styles from '../styles/Style.js';
@@ -28,4 +28,4 @@ const Tile = ({ title, img, handleNavigate, percent, tags }) => {
     )
 }
 
-export default Tile;
+export default memo(Tile);

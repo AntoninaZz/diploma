@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, ActivityIndicator, FlatList, TextInput } from 'react-native';
+import { Text, SafeAreaView, ActivityIndicator, FlatList, TextInput, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import { Stack, useRouter, useGlobalSearchParams } from 'expo-router';
 import Tile from '../../components/Tile';
@@ -14,6 +14,8 @@ const Catalogue = () => {
     const { data, isLoading, error, refetch } = useFetch(`${url}`); //?page=${params.id}
     const [search, onChangeSearch] = React.useState('');
     const [availableSpace, onChangeSpace] = React.useState(0);
+    const [currentIndex, setCurrentIndex] = React.useState(0);
+    let tileHeight = 0.45 * Dimensions.get('window').width;
 
     function compareByColor(a, b) {
         for (let type in data.colors) {
@@ -127,6 +129,20 @@ const Catalogue = () => {
                 contentContainerStyle={[styles.container, { paddingBottom: 2 * gap, flexWrap: 'wrap' }]}
                 style={{ height: availableSpace }}
                 columnWrapperStyle={{ gap }}
+                maxToRenderPerBatch={10}
+                initialNumToRender={10}
+                onScroll={(event) => {
+                    const totalWidth = event.nativeEvent.layoutMeasurement.width
+                    const xPosition = event.nativeEvent.contentOffset.x
+                    const newIndex = Math.round(xPosition / totalWidth)
+                    if (newIndex !== currentIndex) {
+                        setCurrentIndex(newIndex);
+                    }
+                }}
+                getItemLayout={(data, index) => (
+                    { length: tileHeight, offset: (tileHeight + gap) * index, index }
+                )}
+                initialScrollIndex={currentIndex}
                 ListEmptyComponent={<Text style={[styles.title, { height: '85vh', marginTop: gap }]}>За запитом нічого не знайдено :(</Text>}
                 ListHeaderComponent={params.id == 'orchids' ?
                     <SearchBtn handleNavigate={() => router.push(`/search-screen/Search`)} /> :
