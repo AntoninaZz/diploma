@@ -41,7 +41,8 @@
       "backgroundColor": "#FFFAEC"
     },
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/diploma"
     },
     "extra": {
       "router": {
